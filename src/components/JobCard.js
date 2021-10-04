@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -13,53 +13,65 @@ import IconButton from '@mui/material/IconButton'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import HideSourceOutlinedIcon from '@mui/icons-material/HideSourceOutlined';
+import JobDetailModal from './modals/JobDetailModal';
 
 const JobCard = ({ job }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleActionAreaClick = () => {
+    setOpenDialog(true);
+  }
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  }
+
   return (
-    <Card sx={{ minWidth: 275, mb: 2}}>
-      <CardHeader 
-        title={job.company.name}
-        subheader={`${job.company.tagline} - (${job.company.numberOfEmployees.replace('-', ' - ')}) employees`}
-        avatar={
-          <Avatar src={job.company.avatar}
-          alt='company logo'/>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <KeyboardArrowRightIcon />
-          </IconButton>
-        }
-        sx={{
-          '.MuiCardHeader-title': {
-            fontSize: 'h6.fontSize',
-          },
-        }}
-      />
-      <CardContent>
-        <Box sx={{
-          width: '100%',
+    <>
+      <Card sx={{ minWidth: 275, mb: 2}}>
+        <CardHeader 
+          title={job.company.name}
+          subheader={`${job.company.tagline} - (${job.company.numberOfEmployees.replace('-', ' - ')}) employees`}
+          avatar={
+            <Avatar src={job.company.avatar}
+            alt='company logo'/>
+          }
+          action={
+            <IconButton aria-label="settings">
+              <KeyboardArrowRightIcon />
+            </IconButton>
+          }
+          sx={{
+            '.MuiCardHeader-title': {
+              fontSize: 'h6.fontSize',
+            },
+          }}
+        />
+        <CardContent>
+          <Box sx={{
+            width: '100%',
+            display: 'flex',
+          }}>
+          <CardActionArea onClick={handleActionAreaClick}>
+              <Typography sx={{ fontWeight: 'medium'}} color="text.secondary" variant='body1'>
+                {job.role}
+              </Typography>
+          </CardActionArea>
+          <Button variant='outlined' color='primary' size='small'>Apply</Button>
+          </Box>
+        </CardContent>
+        <CardActions sx={{
           display: 'flex',
+          justifyContent: 'space-between'
         }}>
-        <CardActionArea>
-            <Typography sx={{ fontWeight: 'medium'}} color="text.secondary" variant='body1'>
-              {job.role}
-            </Typography>
-        </CardActionArea>
-        <Button variant='outlined' color='primary' size='small'>Apply</Button>
-        </Box>
-      </CardContent>
-      <CardActions sx={{
-        display: 'flex',
-        justifyContent: 'space-between'
-      }}>
-        <Button variant="text" startIcon={<StarOutlineOutlinedIcon />}>
-          Save
-        </Button>
-        <Button variant="text" startIcon={<HideSourceOutlinedIcon />}>
-          Hide
-        </Button>
-      </CardActions>
-    </Card>
+          <Button variant="text" startIcon={<StarOutlineOutlinedIcon />}>
+            Save
+          </Button>
+          <Button variant="text" startIcon={<HideSourceOutlinedIcon />}>
+            Hide
+          </Button>
+        </CardActions>
+      </Card>
+      <JobDetailModal open={openDialog} onClose={handleDialogClose}/>
+    </>
   )
 }
 
