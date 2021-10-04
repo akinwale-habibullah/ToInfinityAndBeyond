@@ -11,8 +11,13 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function JobDetailDialog({onClose, open}) {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth='lg' fullWidth={true} sx={{'.MuiDialog-paper': {
       height: '90vh'
@@ -126,6 +131,7 @@ function JobDetailDialog({onClose, open}) {
         pr: 3
       }}>
         <Button variant='outlined' color='primary'>Close</Button>
+        {matches && <Button variant='contained' color='primary'>Apply</Button>}
       </DialogActions>
     </Dialog>
   );
@@ -133,6 +139,7 @@ function JobDetailDialog({onClose, open}) {
 
 JobDetailDialog.propTypes = {
   open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 const jobDescription = `

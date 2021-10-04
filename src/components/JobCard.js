@@ -14,14 +14,22 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import HideSourceOutlinedIcon from '@mui/icons-material/HideSourceOutlined';
 import JobDetailModal from './modals/JobDetailModal';
+import JobApplicationModal from './modals/JobApplicationModal';
 
 const JobCard = ({ job }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openJobApplyDialog, setOpenJobApplyDialog] = useState(false);
   const handleActionAreaClick = () => {
     setOpenDialog(true);
   }
   const handleDialogClose = () => {
     setOpenDialog(false);
+  }
+  const handleJobApplyClick = () => {
+    setOpenJobApplyDialog(true);
+  }
+  const handleJobApplyClose = () => {
+    setOpenJobApplyDialog(false);
   }
 
   return (
@@ -55,7 +63,7 @@ const JobCard = ({ job }) => {
                 {job.role}
               </Typography>
           </CardActionArea>
-          <Button variant='outlined' color='primary' size='small'>Apply</Button>
+          <Button variant='outlined' color='primary' size='small' onClick={handleJobApplyClick}>Apply</Button>
           </Box>
         </CardContent>
         <CardActions sx={{
@@ -71,6 +79,7 @@ const JobCard = ({ job }) => {
         </CardActions>
       </Card>
       <JobDetailModal open={openDialog} onClose={handleDialogClose}/>
+      <JobApplicationModal open={openJobApplyDialog} onClose={handleJobApplyClose} />
     </>
   )
 }
