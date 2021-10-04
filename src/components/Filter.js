@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import FilterModal from './modals/FilterModal';
 
@@ -61,14 +62,14 @@ export default function BasicCard() {
           
           <Grid item xs={12} md={6}>
             <Grid container spacing={2}>
-              <Grid item xs={6} md={6}>
+              <Grid item xs={5} md={5}>
                 <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleButtonClick}>
                   Skills - {2}
                 </Button>
               </Grid>
-              <Grid item xs={6} md={6}>
+              <Grid item xs={7} md={7}>
                 <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleButtonClick}>
-                  Skills - {2}
+                  Role types - {2}
                 </Button>
               </Grid>
             </Grid>
@@ -79,7 +80,7 @@ export default function BasicCard() {
         display: 'flex',
         justifyContent: 'center'
       }}>
-        <Button size="small" startIcon={<FilterListIcon />}>Learn More</Button>
+        <Button size="small" startIcon={<FilterListIcon />} endIcon={<ExpandMoreIcon />} onClick={handleButtonClick}>Filters</Button>
       </CardActions>
       <FilterModal
         open={dialogOpen}
