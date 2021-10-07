@@ -12,18 +12,29 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import FilterModal from './modals/FilterModal';
+import FilterDialog from './dialogs/FilterDialog';
 
 export default function BasicCard() {
+  const [roles, setRoles] = useState([]);
   const [location, setLocation] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const handleChange = (e) => {
-    setLocation(e.target.value);
+
+  const handleChange = (e, name, newValue=null) => {
+    switch(name) {
+      case 'location':
+        setLocation(e.target.value);
+        break;
+      case 'roles':
+        setRoles(newValue)
+        break;
+      default:
+        return;
+    }
   }
-  const handleButtonClick = () => {
+  const handleOpenDialog = () => {
     setDialogOpen(true)
   }
-  const handleClose = (value) => {
+  const handleCloseDialog = (value) => {
     setDialogOpen(false);
   };
 
@@ -35,7 +46,7 @@ export default function BasicCard() {
             <Autocomplete
               multiple
               id="tags-outlined"
-              options={top100Films}
+              options={jobRoles}
               getOptionLabel={(option) => option.title}
               filterSelectedOptions
               renderInput={(params) => (
@@ -45,30 +56,32 @@ export default function BasicCard() {
                   placeholder="Desired role"
                 />
               )}
+              value={roles}
+              onChange={(e, newValue) => handleChange(e, 'roles', newValue)}
             />
           </Grid>
           <Grid item xs={12} md={6}>
               <Select
+                name='location'
                 value={location}
-                onChange={handleChange}
+                onChange={e => handleChange(e, 'location')}
                 fullWidth
               >
-                <MenuItem value={0}>Select location</MenuItem>
-                <MenuItem value={10}>All planets</MenuItem>
-                <MenuItem value={20}>Earth</MenuItem>
-                <MenuItem value={30}>Mars</MenuItem>
+              {
+                Object.keys(locations).map(lkey => <MenuItem value={lkey} key={lkey}>{locations[lkey]}</MenuItem>)
+              }
               </Select>
           </Grid>
           
           <Grid item xs={12} md={6}>
             <Grid container spacing={2}>
               <Grid item xs={5} md={5}>
-                <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleButtonClick}>
+                <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleOpenDialog}>
                   Skills - {2}
                 </Button>
               </Grid>
               <Grid item xs={7} md={7}>
-                <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleButtonClick}>
+                <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={handleOpenDialog}>
                   Role types - {2}
                 </Button>
               </Grid>
@@ -80,18 +93,29 @@ export default function BasicCard() {
         display: 'flex',
         justifyContent: 'center'
       }}>
-        <Button size="small" startIcon={<FilterListIcon />} endIcon={<ExpandMoreIcon />} onClick={handleButtonClick}>Filters</Button>
+        <Button size="small" startIcon={<FilterListIcon />} endIcon={<ExpandMoreIcon />} onClick={handleOpenDialog}>Filters</Button>
       </CardActions>
-      <FilterModal
+      <FilterDialog
         open={dialogOpen}
-        onClose={handleClose}
+        onClose={handleCloseDialog}
+        jobRoles={jobRoles}
+        locations={locations}
+        selectedValue={{
+          roles: roles,
+          location: location
+        }}
+        currencies={Object.keys(currencies).map(ckey => `${ckey} - ${currencies[ckey]}`)}
+        jobTypesList={jobTypes}
+        companySizes={companySizes}
+        investmentStages={investmentStages}
+        popularMarkets={popularMarkets}
+        popularSkills={popularSkills}
       />
     </Card>
   );
 }
 
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-const top100Films = [
+const jobRoles = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
   { title: 'The Godfather: Part II', year: 1974 },
@@ -216,4 +240,214 @@ const top100Films = [
   { title: 'Snatch', year: 2000 },
   { title: '3 Idiots', year: 2009 },
   { title: 'Monty Python and the Holy Grail', year: 1975 },
+];
+const locations = {
+  0: 'Select location',
+  1: 'All planets',
+  2: 'Earth',
+  3: 'Mars'
+};
+const currencies = {
+  "AFA": "Afghan Afghani",
+  "ALL": "Albanian Lek",
+  "DZD": "Algerian Dinar",
+  "AOA": "Angolan Kwanza",
+  "ARS": "Argentine Peso",
+  "AMD": "Armenian Dram",
+  "AWG": "Aruban Florin",
+  "AUD": "Australian Dollar",
+  "AZN": "Azerbaijani Manat",
+  "BSD": "Bahamian Dollar",
+  "BHD": "Bahraini Dinar",
+  "BDT": "Bangladeshi Taka",
+  "BBD": "Barbadian Dollar",
+  "BYR": "Belarusian Ruble",
+  "BEF": "Belgian Franc",
+  "BZD": "Belize Dollar",
+  "BMD": "Bermudan Dollar",
+  "BTN": "Bhutanese Ngultrum",
+  "BTC": "Bitcoin",
+  "BOB": "Bolivian Boliviano",
+  "BAM": "Bosnia-Herzegovina Convertible Mark",
+  "BWP": "Botswanan Pula",
+  "BRL": "Brazilian Real",
+  "GBP": "British Pound Sterling",
+  "BND": "Brunei Dollar",
+  "BGN": "Bulgarian Lev",
+  "BIF": "Burundian Franc",
+  "KHR": "Cambodian Riel",
+  "CAD": "Canadian Dollar",
+  "CVE": "Cape Verdean Escudo",
+  "KYD": "Cayman Islands Dollar",
+  "XOF": "CFA Franc BCEAO",
+  "XAF": "CFA Franc BEAC",
+  "XPF": "CFP Franc",
+  "CLP": "Chilean Peso",
+  "CNY": "Chinese Yuan",
+  "COP": "Colombian Peso",
+  "KMF": "Comorian Franc",
+  "CDF": "Congolese Franc",
+  "CRC": "Costa Rican ColÃ³n",
+  "HRK": "Croatian Kuna",
+  "CUC": "Cuban Convertible Peso",
+  "CZK": "Czech Republic Koruna",
+  "DKK": "Danish Krone",
+  "DJF": "Djiboutian Franc",
+  "DOP": "Dominican Peso",
+  "XCD": "East Caribbean Dollar",
+  "EGP": "Egyptian Pound",
+  "ERN": "Eritrean Nakfa",
+  "EEK": "Estonian Kroon",
+  "ETB": "Ethiopian Birr",
+  "EUR": "Euro",
+  "FKP": "Falkland Islands Pound",
+  "FJD": "Fijian Dollar",
+  "GMD": "Gambian Dalasi",
+  "GEL": "Georgian Lari",
+  "DEM": "German Mark",
+  "GHS": "Ghanaian Cedi",
+  "GIP": "Gibraltar Pound",
+  "GRD": "Greek Drachma",
+  "GTQ": "Guatemalan Quetzal",
+  "GNF": "Guinean Franc",
+  "GYD": "Guyanaese Dollar",
+  "HTG": "Haitian Gourde",
+  "HNL": "Honduran Lempira",
+  "HKD": "Hong Kong Dollar",
+  "HUF": "Hungarian Forint",
+  "ISK": "Icelandic KrÃ³na",
+  "INR": "Indian Rupee",
+  "IDR": "Indonesian Rupiah",
+  "IRR": "Iranian Rial",
+  "IQD": "Iraqi Dinar",
+  "ILS": "Israeli New Sheqel",
+  "ITL": "Italian Lira",
+  "JMD": "Jamaican Dollar",
+  "JPY": "Japanese Yen",
+  "JOD": "Jordanian Dinar",
+  "KZT": "Kazakhstani Tenge",
+  "KES": "Kenyan Shilling",
+  "KWD": "Kuwaiti Dinar",
+  "KGS": "Kyrgystani Som",
+  "LAK": "Laotian Kip",
+  "LVL": "Latvian Lats",
+  "LBP": "Lebanese Pound",
+  "LSL": "Lesotho Loti",
+  "LRD": "Liberian Dollar",
+  "LYD": "Libyan Dinar",
+  "LTL": "Lithuanian Litas",
+  "MOP": "Macanese Pataca",
+  "MKD": "Macedonian Denar",
+  "MGA": "Malagasy Ariary",
+  "MWK": "Malawian Kwacha",
+  "MYR": "Malaysian Ringgit",
+  "MVR": "Maldivian Rufiyaa",
+  "MRO": "Mauritanian Ouguiya",
+  "MUR": "Mauritian Rupee",
+  "MXN": "Mexican Peso",
+  "MDL": "Moldovan Leu",
+  "MNT": "Mongolian Tugrik",
+  "MAD": "Moroccan Dirham",
+  "MZM": "Mozambican Metical",
+  "MMK": "Myanmar Kyat",
+  "NAD": "Namibian Dollar",
+  "NPR": "Nepalese Rupee",
+  "ANG": "Netherlands Antillean Guilder",
+  "TWD": "New Taiwan Dollar",
+  "NZD": "New Zealand Dollar",
+  "NIO": "Nicaraguan CÃ³rdoba",
+  "NGN": "Nigerian Naira",
+  "KPW": "North Korean Won",
+  "NOK": "Norwegian Krone",
+  "OMR": "Omani Rial",
+  "PKR": "Pakistani Rupee",
+  "PAB": "Panamanian Balboa",
+  "PGK": "Papua New Guinean Kina",
+  "PYG": "Paraguayan Guarani",
+  "PEN": "Peruvian Nuevo Sol",
+  "PHP": "Philippine Peso",
+  "PLN": "Polish Zloty",
+  "QAR": "Qatari Rial",
+  "RON": "Romanian Leu",
+  "RUB": "Russian Ruble",
+  "RWF": "Rwandan Franc",
+  "SVC": "Salvadoran ColÃ³n",
+  "WST": "Samoan Tala",
+  "SAR": "Saudi Riyal",
+  "RSD": "Serbian Dinar",
+  "SCR": "Seychellois Rupee",
+  "SLL": "Sierra Leonean Leone",
+  "SGD": "Singapore Dollar",
+  "SKK": "Slovak Koruna",
+  "SBD": "Solomon Islands Dollar",
+  "SOS": "Somali Shilling",
+  "ZAR": "South African Rand",
+  "KRW": "South Korean Won",
+  "XDR": "Special Drawing Rights",
+  "LKR": "Sri Lankan Rupee",
+  "SHP": "St. Helena Pound",
+  "SDG": "Sudanese Pound",
+  "SRD": "Surinamese Dollar",
+  "SZL": "Swazi Lilangeni",
+  "SEK": "Swedish Krona",
+  "CHF": "Swiss Franc",
+  "SYP": "Syrian Pound",
+  "STD": "São Tomé and Príncipe Dobra",
+  "TJS": "Tajikistani Somoni",
+  "TZS": "Tanzanian Shilling",
+  "THB": "Thai Baht",
+  "TOP": "Tongan Pa'anga",
+  "TTD": "Trinidad & Tobago Dollar",
+  "TND": "Tunisian Dinar",
+  "TRY": "Turkish Lira",
+  "TMT": "Turkmenistani Manat",
+  "UGX": "Ugandan Shilling",
+  "UAH": "Ukrainian Hryvnia",
+  "AED": "United Arab Emirates Dirham",
+  "UYU": "Uruguayan Peso",
+  "USD": "US Dollar",
+  "UZS": "Uzbekistan Som",
+  "VUV": "Vanuatu Vatu",
+  "VEF": "Venezuelan BolÃvar",
+  "VND": "Vietnamese Dong",
+  "YER": "Yemeni Rial",
+  "ZMK": "Zambian Kwacha"
+};
+const jobTypes = [
+  'Full Time', 
+  'Contract', 
+  'Internship', 
+  'Cofounder'
+];
+const companySizes=[
+  '1-10', 
+  '11-50', 
+  '51-200', 
+  '201-500', 
+  '501-1000', 
+  '1001-5000', 
+  '5000+'
+];
+const investmentStages = [
+  'Seed Stage', 
+  'Series A', 
+  'Series B', 
+  'Growth', 
+  'IPO', 
+  'Acquired'
+];
+const popularSkills = [
+  'Python', 
+  'React.js', 
+  'Node.js', 
+  'Java', 
+  'Ruby on Rails'
+];
+const popularMarkets = [
+  'Healthcare', 
+  'FinTech', 
+  'E-Commerce', 
+  'Education', 
+  'Enterprise Software', 
+  'Marketplaces'
 ];
