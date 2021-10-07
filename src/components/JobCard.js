@@ -13,8 +13,8 @@ import IconButton from '@mui/material/IconButton'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import HideSourceOutlinedIcon from '@mui/icons-material/HideSourceOutlined';
-import JobDetailModal from './modals/JobDetailModal';
-import JobApplicationModal from './modals/JobApplicationModal';
+import JobDetailModal from './dialogs/JobDetailDialog';
+import JobApplicationModal from './dialogs/JobApplicationDialog';
 
 const JobCard = ({ job }) => {
   const [openDialog, setOpenDialog] = useState(false);
