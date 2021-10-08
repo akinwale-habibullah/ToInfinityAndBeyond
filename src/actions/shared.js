@@ -13,7 +13,6 @@ import { receiveCurrencies } from '../actions/currencies';
 
 // load initial data from API
 const handleInitialData = () => {
-  console.log('inside handleInitiaData');
   return (dispatch) => {
     return Promise.all([
       getJobs(),

@@ -1,9 +1,58 @@
+import _ from 'underscore';
 // mock asynchronous API calls
 const getJobs = () => {
   return new Promise((res, rej) => {
     return setTimeout(
       () => {
         return res(jobs);
+      }, 2000)
+  }).then(response => response)
+}
+const getJobsByFilter = (filter) => {
+  // test for every condition and filter list of jobs based on this condition
+  return new Promise((res, rej) => {
+    return setTimeout(
+      () => {
+        let filteredJobs = [].concat(jobs);
+        if (filter.roles.length > 0) {
+          filteredJobs = filteredJobs.filter(job => filter.roles.indexOf(job.role) !== -1);
+        }
+        if (filter.location !== 'none' && filter.location !== 'all') {
+          filteredJobs = filteredJobs.filter(job => job.location === filter.location);
+        }
+        if (filter.salary && (filter.salary[0] !== 0 && filter.salary[1] !== 0)) {
+          filteredJobs = filteredJobs.filter(job => job.salary >= filter.salary[0] && jobs.salary <= filter.salary[1]);
+        }
+        if (filter.currency) {
+          filteredJobs = filteredJobs.filter(job => job.currency === filter.currency);
+        }
+        if (filter.equity && (filter.equity[0] !== 0 && filter.equity[1] !== 0)) {
+          filteredJobs = filteredJobs.filter(job => parseFloat(job.equity) >= parseFloat(filter.equity[0]) && parseFloat(jobs.equity) <= parseFloat(filter.equity[1]));
+        }
+        if (filter.skills.length > 0) {
+          let jobsList = [];
+          filter.skills.map(filterSkill => {
+            jobsList = jobsList.concat(
+              filteredJobs.filter(job => job.skills.indexOf(filterSkill) !== -1)
+            );
+            return jobsList;
+          });
+
+          filteredJobs = _.uniq(jobsList, job => job.id);
+        }
+        if (filter.markets.length > 0) {
+          filteredJobs = filteredJobs.filter(job => filter.markets.indexOf(job.market) !== -1);
+        }
+        if (filter.jobTypes.length > 0) {
+          filteredJobs = filteredJobs.filter(job => filter.jobTypes.indexOf(job.jobType) !== -1);
+        }
+        if (filter.companySize.length > 0) {
+          filteredJobs = filteredJobs.filter(job => filter.companySize.indexOf(job.company.size) !== -1);
+        }
+        if (filter.investmentStage.length > 0) {
+          filteredJobs = filteredJobs.filter(job => filter.investmentStage.indexOf(job.company.investmentStage) !== -1);
+        }
+        return res(filteredJobs);
       }, 2000)
   }).then(response => response)
 }
@@ -44,35 +93,82 @@ const jobs = [
   {
     id: 0,
     date: 'Fri Oct 08 2021',
+    role: 'Accountant',
+    location: 'mars',
+    salary: 100,
+    currency: 'US Dollar - USD',
+    equity: 0.2,
+    market: 'Accommodation',
+    jobType: 'Full Time',
+    experience: 6,
+    skills: ['Data', 'Critical Thinking'],
     company: {
       name: 'Wonderful company',
       tagline: 'Onward to Pluto and beyond',
-      numberOfEmployees: '10-20',
-      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg'
+      size: '10-20',
+      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
+      investmentStage: 'Seed Stage'
     },
-    role: 'Senior Open Source Developer'
   },
   {
     id: 1,
-    date: 'Thur Oct 07 2021',
-    company: {
-      name: 'Microsoft',
-      tagline: 'Best software company in the world',
-      numberOfEmployees: '10-20',
-      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg'
-    },
-    role: 'Senior React Developer'
-  },
-  {
-    id: 2,
-    date: 'Wed Oct 06 2021',
+    date: 'Fri Oct 08 2021',
+    role: 'Accountant',
+    location: 'mars',
+    salary: 100,
+    currency: 'US Dollar - USD',
+    equity: 0.2,
+    market: 'Accommodation',
+    jobType: 'Full Time',
+    skills: ['Data'],
+    experience: 6,
     company: {
       name: 'Google',
       tagline: 'Used to do no evil',
-      numberOfEmployees: '10-20',
-      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg'
+      size: '5000+',
+      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
+      investmentStage: 'Public'
     },
-    role: 'Go Developer'
+  },
+  {
+    id: 2,
+    date: 'Thur Oct 07 2021',
+    role: 'Architect',
+    location: 'mars',
+    salary: 100,
+    currency: 'US Dollar - USD',
+    equity: 0.2,
+    market: 'Accommodation',
+    skills: ['Data'],
+    jobType: 'Full Time',
+    experience: 6,
+    company: {
+      name: 'Wonderful company',
+      tagline: 'Onward to Pluto and beyond',
+      size: '10-20',
+      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
+      investmentStage: 'Seed Stage'
+    },
+  },
+  {
+    id: 3,
+    date: 'Wed Oct 06 2021',
+    role: 'Chemical Engineer',
+    location: 'mars',
+    salary: 100,
+    currency: 'US Dollar - USD',
+    equity: 0.2,
+    market: 'Accommodation',
+    skills: [],
+    jobType: 'Full Time',
+    experience: 6,
+    company: {
+      name: 'Microsoft',
+      tagline: 'Best software company in the world',
+      size: '5000+',
+      avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
+      investmentStage: 'Public'
+    },
   }
 ];
 const skills = [
@@ -416,6 +512,7 @@ const markets = [
 
 export {
   getJobs,
+  getJobsByFilter,
   getSkills,
   getCurrencies,
   getJobRoles,

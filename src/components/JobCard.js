@@ -37,7 +37,7 @@ const JobCard = ({ job }) => {
       <Card sx={{ minWidth: 275, mb: 2}}>
         <CardHeader 
           title={job.company.name}
-          subheader={`${job.company.tagline} - (${job.company.numberOfEmployees.replace('-', ' - ')}) employees`}
+          subheader={`${job.company.tagline} - (${job.company.size.replace('-', ' - ')}) employees`}
           avatar={
             <Avatar src={job.company.avatar}
             alt='company logo'/>
@@ -90,7 +90,7 @@ JobCard.propTypes = {
     company: PropTypes.shape({
       name: PropTypes.string.isRequired,
       tagline: PropTypes.string.isRequired,
-      numberOfEmployees: PropTypes.string.isRequired
+      size: PropTypes.string.isRequired
     }).isRequired
   }).isRequired
 }

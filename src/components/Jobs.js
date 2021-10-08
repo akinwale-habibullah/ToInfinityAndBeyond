@@ -29,7 +29,7 @@ const Jobs = ({ jobs, count }) => {
 }
 const mapStateToProps = ({ jobs }) => ({
   count: jobs.length,
-  jobs
+  jobs: jobs
 });
 
 export default connect(mapStateToProps)(Jobs);
