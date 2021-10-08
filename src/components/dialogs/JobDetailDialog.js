@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -13,8 +14,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-function JobDetailDialog({onClose, open}) {
+function JobDetailDialog({onClose, open, job}) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -37,8 +37,14 @@ function JobDetailDialog({onClose, open}) {
               }}>
                 <Avatar>CM</Avatar>
                 <Box sx={{display: 'flex', flexDirection: 'column', ml: 2}}>
-                  <Typography variant='h6'>Job role</Typography>
-                  <Typography variant='subtitle2'>Salary value or No Salary</Typography>
+                  <Typography variant='h6'>{job.role}</Typography>
+                  <Typography variant='subtitle2'>
+                    {
+                      job.salary
+                      ? `${job.salary} ${job.currency} per month.`
+                      : 'No salary information'
+                    }
+                  </Typography>
                 </Box>
               </Box>
               <Box sx={{
@@ -55,7 +61,7 @@ function JobDetailDialog({onClose, open}) {
                 <Button variant='contained' color='primary'>Apply</Button>
               </Box>
             </Box>
-            <Divider fullWidth={true} sx={{mt: 1, mb: 1}}/>
+            <Divider sx={{mt: 1, mb: 1}}/>
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -63,7 +69,7 @@ function JobDetailDialog({onClose, open}) {
                 <Card>
                   <CardContent>
                     <Typography variant='body1'>
-                      {jobDescription}
+                      {job.description}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -74,30 +80,30 @@ function JobDetailDialog({onClose, open}) {
                       <Box sx={{mb: 1}}>
                         <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Company</Typography>
                         <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
-                          <Avatar>IM</Avatar>
-                          <Typography variant='body1' sx={{ml: 2}}>Company name</Typography>
+                          <Avatar>{job.company.name.split(' ').map(item => item[0].toUpperCase()).join('')}</Avatar>
+                          <Typography variant='body1' sx={{ml: 2}}>{job.company.name}</Typography>
                         </Box>
                       </Box>
 
                       <Box sx={{mb: 1}}>
                         <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Location</Typography>
-                          <Typography variant='body1'>Earth - Mars</Typography>
+                          <Typography variant='body1'>{job.location[0].toUpperCase() + job.location.substr(1,)}</Typography>
                       </Box>
 
                       <Box sx={{mb: 1}}>
                         <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Job type</Typography>
-                        <Typography variant='body1'>Full time</Typography>
+                        <Typography variant='body1'>{job.jobType}</Typography>
                       </Box>
 
                       <Box sx={{mb: 1}}>
                         <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Experience</Typography>
-                        <Typography variant='body1'>3 years</Typography>
+                        <Typography variant='body1'>{job.experience} years.</Typography>
                       </Box>
 
                       <Box sx={{mb: 1}}>
                         <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Skills</Typography>
                         <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', alignItems: 'center'}}>
-                          {['Python', 'Django', 'DevOps', 'Open Source Software', 'React.js'].map((skill) => (
+                          {job.skills.map((skill) => (
                             <Chip label={skill} variant="outlined" key={skill} sx={{mb: 1, mr: 1}}/>
                           ))}
                         </Box>
@@ -114,10 +120,9 @@ function JobDetailDialog({onClose, open}) {
                           p: 2
                         }}>
                           <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                            <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Xavier Morelle</Typography>
-                            <Typography variant='body1' color='secondary'>CEO - 4 years</Typography>
+                            <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>{job.company.contact}</Typography>
                           </Box>
-                          <Avatar>CO</Avatar>
+                          <Avatar>{job.company.contact.split(' ').map(item => item[0].toUpperCase()).join('')}</Avatar>
                         </Box>
                       </Box>
                     </CardContent>
@@ -141,6 +146,10 @@ JobDetailDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired
 };
+
+const mapStateToProps = ({ jobs }, { id }) => ({
+  job: jobs[id]
+});
 
 const jobDescription = `
   About the job
@@ -217,4 +226,4 @@ const jobDescription = `
 Important: Applications need to be submitted on that form - applications submitted only on angel.co won’t be considered (we review applications all together, independently of the job board, as we post it in multiple places.)
 `
 
-export default JobDetailDialog;
+export default connect(mapStateToProps)(JobDetailDialog);

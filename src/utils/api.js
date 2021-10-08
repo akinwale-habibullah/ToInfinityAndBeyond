@@ -13,7 +13,10 @@ const getJobsByFilter = (filter) => {
   return new Promise((res, rej) => {
     return setTimeout(
       () => {
-        let filteredJobs = [].concat(jobs);
+        let jobsObj = Object.assign({}, jobs);
+        let filteredJobs = [].concat(
+          Object.keys(jobsObj).map(jobId => jobsObj[jobId])
+        );
         if (filter.roles.length > 0) {
           filteredJobs = filteredJobs.filter(job => filter.roles.indexOf(job.role) !== -1);
         }
@@ -88,9 +91,22 @@ const getMarkets = () => {
       }, 2000)
   }).then(response => response)
 }
+const postJobApplication = (id, letter) => {
+  return new Promise((res, rej) => {
+    return setTimeout(
+      () => {
+        jobs[id] = {
+          ...jobs[id],
+          applied: true,
+          letter
+        }
+        return res('success');
+      }, 2000)
+  }).then(response => response)
+}
 
-const jobs = [
-  {
+const jobs = {
+  0: {
     id: 0,
     date: 'Fri Oct 08 2021',
     role: 'Accountant',
@@ -102,15 +118,22 @@ const jobs = [
     jobType: 'Full Time',
     experience: 6,
     skills: ['Data', 'Critical Thinking'],
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed nisi lacus sed viverra tellus in hac habitasse platea. Et malesuada fames ac turpis egestas. Mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing. Id eu nisl nunc mi ipsum. Tristique risus nec feugiat in fermentum. Sit amet nisl purus in mollis nunc sed id semper. Justo donec enim diam vulputate ut pharetra sit. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Eget velit aliquet sagittis id consectetur purus ut. Duis ut diam quam nulla porttitor massa. Velit laoreet id donec ultrices tincidunt arcu. Convallis posuere morbi leo urna molestie at elementum eu.\n
+
+    Et netus et malesuada fames ac turpis egestas. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Quis imperdiet massa tincidunt nunc. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Amet justo donec enim diam vulputate ut pharetra sit amet. Turpis in eu mi bibendum neque. Amet volutpat consequat mauris nunc. Volutpat blandit aliquam etiam erat velit scelerisque. Molestie nunc non blandit massa enim nec dui nunc. Sit amet nisl purus in. Nulla facilisi cras fermentum odio eu feugiat pretium. Ac ut consequat semper viverra nam libero justo laoreet sit. Id aliquet lectus proin nibh nisl condimentum. Cras pulvinar mattis nunc sed blandit. Euismod nisi porta lorem mollis aliquam ut porttitor. Sagittis vitae et leo duis ut diam quam. Nunc mi ipsum faucibus vitae aliquet. Morbi non arcu risus quis varius.\n
+    
+    Interdum varius sit amet mattis. Condimentum id venenatis a condimentum. Rhoncus dolor purus non enim praesent. Eleifend quam adipiscing vitae proin sagittis nisl. Elementum tempus egestas sed sed risus. Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula. Sagittis vitae et leo duis ut diam quam. Cras tincidunt lobortis feugiat vivamus. Malesuada nunc vel risus commodo viverra maecenas. A erat nam at lectus urna duis. Mauris augue neque gravida in fermentum.`,
     company: {
       name: 'Wonderful company',
       tagline: 'Onward to Pluto and beyond',
       size: '10-20',
       avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
-      investmentStage: 'Seed Stage'
+      investmentStage: 'Seed Stage',
+      contact: 'Xavier Morelle'
     },
+    applied: false
   },
-  {
+  1: {
     id: 1,
     date: 'Fri Oct 08 2021',
     role: 'Accountant',
@@ -122,19 +145,26 @@ const jobs = [
     jobType: 'Full Time',
     skills: ['Data'],
     experience: 6,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed nisi lacus sed viverra tellus in hac habitasse platea. Et malesuada fames ac turpis egestas. Mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing. Id eu nisl nunc mi ipsum. Tristique risus nec feugiat in fermentum. Sit amet nisl purus in mollis nunc sed id semper. Justo donec enim diam vulputate ut pharetra sit. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Eget velit aliquet sagittis id consectetur purus ut. Duis ut diam quam nulla porttitor massa. Velit laoreet id donec ultrices tincidunt arcu. Convallis posuere morbi leo urna molestie at elementum eu.\n
+
+    Et netus et malesuada fames ac turpis egestas. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Quis imperdiet massa tincidunt nunc. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Amet justo donec enim diam vulputate ut pharetra sit amet. Turpis in eu mi bibendum neque. Amet volutpat consequat mauris nunc. Volutpat blandit aliquam etiam erat velit scelerisque. Molestie nunc non blandit massa enim nec dui nunc. Sit amet nisl purus in. Nulla facilisi cras fermentum odio eu feugiat pretium. Ac ut consequat semper viverra nam libero justo laoreet sit. Id aliquet lectus proin nibh nisl condimentum. Cras pulvinar mattis nunc sed blandit. Euismod nisi porta lorem mollis aliquam ut porttitor. Sagittis vitae et leo duis ut diam quam. Nunc mi ipsum faucibus vitae aliquet. Morbi non arcu risus quis varius.\n
+    
+    Interdum varius sit amet mattis. Condimentum id venenatis a condimentum. Rhoncus dolor purus non enim praesent. Eleifend quam adipiscing vitae proin sagittis nisl. Elementum tempus egestas sed sed risus. Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula. Sagittis vitae et leo duis ut diam quam. Cras tincidunt lobortis feugiat vivamus. Malesuada nunc vel risus commodo viverra maecenas. A erat nam at lectus urna duis. Mauris augue neque gravida in fermentum.`,
     company: {
       name: 'Google',
       tagline: 'Used to do no evil',
       size: '5000+',
       avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
-      investmentStage: 'Public'
+      investmentStage: 'Public',
+      contact: 'Sundar Pichai'
     },
+    applied: false,
   },
-  {
+  2: {
     id: 2,
     date: 'Thur Oct 07 2021',
     role: 'Architect',
-    location: 'mars',
+    location: 'earth',
     salary: 100,
     currency: 'US Dollar - USD',
     equity: 0.2,
@@ -142,15 +172,22 @@ const jobs = [
     skills: ['Data'],
     jobType: 'Full Time',
     experience: 6,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed nisi lacus sed viverra tellus in hac habitasse platea. Et malesuada fames ac turpis egestas. Mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing. Id eu nisl nunc mi ipsum. Tristique risus nec feugiat in fermentum. Sit amet nisl purus in mollis nunc sed id semper. Justo donec enim diam vulputate ut pharetra sit. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Eget velit aliquet sagittis id consectetur purus ut. Duis ut diam quam nulla porttitor massa. Velit laoreet id donec ultrices tincidunt arcu. Convallis posuere morbi leo urna molestie at elementum eu.\n
+
+    Et netus et malesuada fames ac turpis egestas. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Quis imperdiet massa tincidunt nunc. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Amet justo donec enim diam vulputate ut pharetra sit amet. Turpis in eu mi bibendum neque. Amet volutpat consequat mauris nunc. Volutpat blandit aliquam etiam erat velit scelerisque. Molestie nunc non blandit massa enim nec dui nunc. Sit amet nisl purus in. Nulla facilisi cras fermentum odio eu feugiat pretium. Ac ut consequat semper viverra nam libero justo laoreet sit. Id aliquet lectus proin nibh nisl condimentum. Cras pulvinar mattis nunc sed blandit. Euismod nisi porta lorem mollis aliquam ut porttitor. Sagittis vitae et leo duis ut diam quam. Nunc mi ipsum faucibus vitae aliquet. Morbi non arcu risus quis varius.\n
+    
+    Interdum varius sit amet mattis. Condimentum id venenatis a condimentum. Rhoncus dolor purus non enim praesent. Eleifend quam adipiscing vitae proin sagittis nisl. Elementum tempus egestas sed sed risus. Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula. Sagittis vitae et leo duis ut diam quam. Cras tincidunt lobortis feugiat vivamus. Malesuada nunc vel risus commodo viverra maecenas. A erat nam at lectus urna duis. Mauris augue neque gravida in fermentum.`,
     company: {
       name: 'Wonderful company',
       tagline: 'Onward to Pluto and beyond',
       size: '10-20',
       avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
-      investmentStage: 'Seed Stage'
+      investmentStage: 'Seed Stage',
+      contact: 'Xavier Morelle'
     },
+    applied: false
   },
-  {
+  3: {
     id: 3,
     date: 'Wed Oct 06 2021',
     role: 'Chemical Engineer',
@@ -162,15 +199,22 @@ const jobs = [
     skills: [],
     jobType: 'Full Time',
     experience: 6,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed nisi lacus sed viverra tellus in hac habitasse platea. Et malesuada fames ac turpis egestas. Mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing. Id eu nisl nunc mi ipsum. Tristique risus nec feugiat in fermentum. Sit amet nisl purus in mollis nunc sed id semper. Justo donec enim diam vulputate ut pharetra sit. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Eget velit aliquet sagittis id consectetur purus ut. Duis ut diam quam nulla porttitor massa. Velit laoreet id donec ultrices tincidunt arcu. Convallis posuere morbi leo urna molestie at elementum eu.\n
+
+    Et netus et malesuada fames ac turpis egestas. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Quis imperdiet massa tincidunt nunc. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Amet justo donec enim diam vulputate ut pharetra sit amet. Turpis in eu mi bibendum neque. Amet volutpat consequat mauris nunc. Volutpat blandit aliquam etiam erat velit scelerisque. Molestie nunc non blandit massa enim nec dui nunc. Sit amet nisl purus in. Nulla facilisi cras fermentum odio eu feugiat pretium. Ac ut consequat semper viverra nam libero justo laoreet sit. Id aliquet lectus proin nibh nisl condimentum. Cras pulvinar mattis nunc sed blandit. Euismod nisi porta lorem mollis aliquam ut porttitor. Sagittis vitae et leo duis ut diam quam. Nunc mi ipsum faucibus vitae aliquet. Morbi non arcu risus quis varius.\n
+    
+    Interdum varius sit amet mattis. Condimentum id venenatis a condimentum. Rhoncus dolor purus non enim praesent. Eleifend quam adipiscing vitae proin sagittis nisl. Elementum tempus egestas sed sed risus. Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula. Sagittis vitae et leo duis ut diam quam. Cras tincidunt lobortis feugiat vivamus. Malesuada nunc vel risus commodo viverra maecenas. A erat nam at lectus urna duis. Mauris augue neque gravida in fermentum.`,
     company: {
       name: 'Microsoft',
       tagline: 'Best software company in the world',
       size: '5000+',
       avatar: 'https://mui.com/static/images/cards/contemplative-reptile.jpg',
-      investmentStage: 'Public'
+      investmentStage: 'Public',
+      contact: 'Satya Nadella'
     },
+    applied: false
   }
-];
+};
 const skills = [
   {title: 'Software Engineering', popular: true},
   {title: 'Data', popular: true}, 
@@ -516,5 +560,6 @@ export {
   getSkills,
   getCurrencies,
   getJobRoles,
-  getMarkets
+  getMarkets,
+  postJobApplication
 }

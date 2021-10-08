@@ -29,7 +29,9 @@ const Jobs = ({ jobs, count }) => {
 }
 const mapStateToProps = ({ jobs }) => ({
   count: jobs.length,
-  jobs: jobs
+  jobs: Object.keys(jobs)
+    .map(id => jobs[id])
+    .filter(job => job.applied !== true)
 });
 
 export default connect(mapStateToProps)(Jobs);

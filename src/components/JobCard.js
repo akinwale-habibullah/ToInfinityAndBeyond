@@ -78,8 +78,8 @@ const JobCard = ({ job }) => {
           </Button>
         </CardActions>
       </Card>
-      <JobDetailModal open={openDialog} onClose={handleDialogClose}/>
-      <JobApplicationModal open={openJobApplyDialog} onClose={handleJobApplyClose} />
+      <JobDetailModal open={openDialog} onClose={handleDialogClose} id={job.id}/>
+      <JobApplicationModal open={openJobApplyDialog} onClose={handleJobApplyClose} id={job.id}/>
     </>
   )
 }
