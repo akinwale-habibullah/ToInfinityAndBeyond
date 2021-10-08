@@ -104,6 +104,30 @@ const postJobApplication = (id, letter) => {
       }, 2000)
   }).then(response => response)
 }
+const putSaveJob = (id) => {
+  return new Promise((res, rej) => {
+    return setTimeout(
+      () => {
+        jobs[id] = {
+          ...jobs[id],
+          saved: true,
+        }
+        return res('success');
+      }, 2000)
+  }).then(response => response)
+}
+const putHideJob = (id) => {
+  return new Promise((res, rej) => {
+    return setTimeout(
+      () => {
+        jobs[id] = {
+          ...jobs[id],
+          hidden: true,
+        }
+        return res('success');
+      }, 2000)
+  }).then(response => response)
+}
 
 const jobs = {
   0: {
@@ -561,5 +585,7 @@ export {
   getCurrencies,
   getJobRoles,
   getMarkets,
-  postJobApplication
+  postJobApplication,
+  putSaveJob,
+  putHideJob
 }

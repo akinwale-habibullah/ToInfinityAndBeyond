@@ -6,6 +6,7 @@ import reducers from './reducers';
 import middlewares from './middlewares';
 import './index.css';
 import App from './App';
+import CssBaseline from '@mui/material/CssBaseline';
 import reportWebVitals from './reportWebVitals';
 
 const store = createStore(reducers, middlewares);
@@ -13,7 +14,10 @@ const store = createStore(reducers, middlewares);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <>
+        <CssBaseline />
+        <App />
+      </>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

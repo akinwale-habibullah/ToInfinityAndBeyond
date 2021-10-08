@@ -1,5 +1,5 @@
-import { RECEIVE_JOBS, FILTER_JOBS, APPLY_TO_JOB } from './types';
-import { getJobsByFilter, postJobApplication } from '../utils/api';
+import { RECEIVE_JOBS, FILTER_JOBS, APPLY_TO_JOB, SAVE_JOB, HIDE_JOB } from './types';
+import { getJobsByFilter, postJobApplication, putSaveJob, putHideJob } from '../utils/api';
 
 const receiveJobs = (jobs) => ({
   type: RECEIVE_JOBS,
@@ -15,7 +15,17 @@ const applyToJob = (id, letter) => ({
   type: APPLY_TO_JOB,
   id,
   letter
-})
+});
+
+const saveJob = (id) => ({
+  type: SAVE_JOB,
+  id,
+});
+
+const hideJob = (id) => ({
+  type: HIDE_JOB,
+  id,
+});
 
 const handleFilterJobs = (filter) => {
   return (dispatch) => {
@@ -31,11 +41,29 @@ const handleApplyToJob = (id, letter) => {
       dispatch(applyToJob(id, letter));
     })
   }
-}
+};
+
+const handleSaveJob = (id) => {
+  return (dispatch) => {
+    return putSaveJob(id).then(() => {
+      dispatch(saveJob(id));
+    })
+  }
+};
+
+const handleHideJob = (id) => {
+  return (dispatch) => {
+    return putHideJob(id).then(() => {
+      dispatch(hideJob(id));
+    })
+  }
+};
 
 export {
   receiveJobs,
   filterJobs,
   handleFilterJobs,
-  handleApplyToJob
+  handleApplyToJob,
+  handleSaveJob,
+  handleHideJob
 }
