@@ -18,12 +18,6 @@ const Jobs = ({ jobs, count, applied, saved, hidden }) => {
     }
   }
 
-  if (jobs.length === 0 && !(applied || saved || hidden)) {
-    return <Box sx={{height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <Typography variant='h4' color='secondary'>Loading...</Typography>
-    </Box>
-  }
-
   return (
     <>
       <Container>
