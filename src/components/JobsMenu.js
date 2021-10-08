@@ -4,13 +4,12 @@ import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-const JobsMenu = ({ order=0, onSortOrder }) => {
+const JobsMenu = ({ count, order, onSortOrder }) => {
   const [sortOrder, setSortOrder] = useState(order);
   const handleSortOrder = (e) => {
     setSortOrder(e.target.value);
-    // onSortOrder(e.target.value);
+    onSortOrder(e.target.value);
   }
-
 
   return (
     <Grid container spacing={2} sx={{
@@ -20,7 +19,7 @@ const JobsMenu = ({ order=0, onSortOrder }) => {
     }}>
       <Grid item xs={6}>
         <Typography variant='subtitle1'>        
-          <Typography variant='subtitle1' sx={{fontWeight: 'bold'}} component='span'>6336</Typography> results
+          <Typography variant='subtitle1' sx={{fontWeight: 'bold'}} component='span'>{count}</Typography> results
         </Typography>
       </Grid>
       <Grid item xs={6} sx={{
@@ -35,8 +34,8 @@ const JobsMenu = ({ order=0, onSortOrder }) => {
           size='small'
           sx={{ml: 1}}
         >
-          <MenuItem value={0}>Newest</MenuItem>
-          <MenuItem value={1}>Oldest</MenuItem>
+          <MenuItem value='asc'>Newest</MenuItem>
+          <MenuItem value='desc'>Oldest</MenuItem>
         </Select>
       </Grid>
     </Grid>

@@ -1,8 +1,15 @@
-import Home from './components/Home'
+import { useEffect } from 'react';
+import { handleInitialData } from './actions/shared';
+import { connect } from 'react-redux'
+import Home from './components/Home';
 import CssBaseline from '@mui/material/CssBaseline';
 
 
-function App() {
+const App = ({ dispatch }) => {
+  useEffect(() => {
+    dispatch(handleInitialData());
+  }, [dispatch])
+
   return (
     <>
       <CssBaseline />
@@ -11,4 +18,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect()(App);
