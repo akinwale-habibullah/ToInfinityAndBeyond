@@ -26,7 +26,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const FilterDialog = ({ 
-  onClose, selectedValue, jobRoles, 
+  onClose, selectedValue, jobRoles, skillsList, marketsList,
   locations, currencies, open, jobTypesList,
   companySizes, investmentStages, popularSkills, popularMarkets
 }) => {
@@ -37,7 +37,7 @@ const FilterDialog = ({
   }, [selectedValue, popularSkills, popularMarkets]);
 
   const [salary, setSalary] = useState([0,200]);
-  const [currency, setCurrency] = useState('USD - US Dollar');
+  const [currency, setCurrency] = useState('US Dollar - USD');
   const [equity, setEquity] = useState([0,2]);
   const [roles, setRoles] = useState([]);
   const [skills, setSkills] = useState([]);
@@ -171,7 +171,6 @@ const FilterDialog = ({
                       multiple
                       id="tags-outlined"
                       options={jobRoles}
-                      getOptionLabel={(option) => option.title}
                       filterSelectedOptions
                       size='small'
                       renderInput={(params) => (
@@ -292,7 +291,8 @@ const FilterDialog = ({
                       key={true}
                       disablePortal
                       id="combo-box-demo"
-                      options={currencies}
+                      options={skillsList}
+                      getOptionLabel={item => item.title}
                       fullWidth
                       size='small'
                       onChange={(e, value) => handleInputChange(e, 'skills', value)}
@@ -314,8 +314,13 @@ const FilterDialog = ({
                                 </IconButton>
                               }
                             >
+                              {console.log('string: ', skill)}
                               <ListItemText
-                                primary={skill[0] + skill.substr(1,).toLowerCase()}
+                                primary={
+                                  skill.title 
+                                  ? skill.title[0] + skill.title.substr(1,).toLowerCase()
+                                  : skill[0] + skill.substr(1,).toLowerCase()
+                                }
                                 sx={{m: 0}}
                               />
                             </ListItem>
@@ -362,7 +367,8 @@ const FilterDialog = ({
                       key={true}
                       disablePortal
                       id="combo-box-demo"
-                      options={currencies}
+                      options={marketsList}
+                      getOptionLabel={item => item.title}
                       fullWidth
                       size='small'
                       onChange={(e, value) => handleInputChange(e, 'markets', value)}
@@ -385,7 +391,11 @@ const FilterDialog = ({
                               }
                             >
                               <ListItemText
-                                primary={market[0].toUpperCase() + market.substr(1,).toLowerCase()}
+                                primary={
+                                  market.title 
+                                  ? market.title[0].toUpperCase() + market.title.substr(1,).toLowerCase()
+                                  : market[0].toUpperCase() + market.substr(1,).toLowerCase()
+                                }
                                 sx={{m: 0}}
                               />
                             </ListItem>
