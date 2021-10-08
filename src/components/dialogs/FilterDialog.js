@@ -26,20 +26,22 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const FilterDialog = ({ 
-  onClose, selectedValue, jobRoles, 
+  onClose, selectedValue, jobRoles, skillsList, marketsList,
   locations, currencies, open, jobTypesList,
   companySizes, investmentStages, popularSkills, popularMarkets
 }) => {
   useEffect(() => {
     setRoles(selectedValue.roles.length > 0 ? selectedValue.roles : []);
+    setLocation(selectedValue.location ? selectedValue.location : 'none');
     setPopSkills(popularSkills);
     setPopMarkets(popularMarkets);
   }, [selectedValue, popularSkills, popularMarkets]);
 
-  const [salary, setSalary] = useState([0,200]);
-  const [currency, setCurrency] = useState('USD - US Dollar');
-  const [equity, setEquity] = useState([0,2]);
   const [roles, setRoles] = useState([]);
+  const [location, setLocation] = useState('');
+  const [salary, setSalary] = useState([0,200]);
+  const [currency, setCurrency] = useState('US Dollar - USD');
+  const [equity, setEquity] = useState([0,2]);
   const [skills, setSkills] = useState([]);
   const [markets, setMarkets] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
@@ -55,6 +57,9 @@ const FilterDialog = ({
       case 'roles':
         setRoles(newValue);
         break;
+      case 'location':
+        setLocation(e.target.value);
+        break;
       case 'salary':
         setSalary(newValue);
         break;
@@ -65,13 +70,13 @@ const FilterDialog = ({
         setEquity(newValue);
         break;
       case 'skills':
-        if (skills.indexOf(newValue) === -1 && newValue !== null) {
-          setSkills(skills.concat(newValue));
+        if (skills.indexOf(newValue.title) === -1 && newValue !== null) {
+          setSkills(skills.concat(newValue.title));
         }
         break;
       case 'markets':
-        if (markets.indexOf(newValue) === -1 && newValue !== null) {
-          setMarkets(markets.concat(newValue));
+        if (markets.indexOf(newValue.title) === -1 && newValue !== null) {
+          setMarkets(markets.concat(newValue.title));
         }
         break;
       case 'jobtypes':
@@ -102,14 +107,18 @@ const FilterDialog = ({
         }
         break;
       case 'popularskills':
-        const newPopularSkills = popSkills.filter(skill => skill !== newValue);
-        setPopSkills(newPopularSkills);
-        setSkills([].concat(skills, newValue));
+        if (skills.indexOf(newValue) === -1 && newValue !== null) {
+          const newPopularSkills = popSkills.filter(skill => skill !== newValue);
+          setPopSkills(newPopularSkills);
+          setSkills([].concat(skills, newValue));
+        }
         break;
       case 'popularmarkets':
-        const newPopularMarkets = popMarkets.filter(market => market !== newValue);
-        setPopMarkets(newPopularMarkets);
-        setMarkets([].concat(markets, newValue));
+        if (markets.indexOf(newValue) === -1 && newValue !== null) {
+          const newPopularMarkets = popMarkets.filter(market => market !== newValue);
+          setPopMarkets(newPopularMarkets);
+          setMarkets([].concat(markets, newValue));
+        }
         break;
       default:
         return;
@@ -146,10 +155,25 @@ const FilterDialog = ({
   const handleClearInvestmentStages = () => {
     setInvestmentStage([]);
   }
-  const handleClose = () => {
-    // return object of selected values in dialog
-    let value = {}
-    onClose(value);
+  const handleClose = (saveChanges) => {
+    let value = {
+      roles,
+      location,
+      salary,
+      currency,
+      equity,
+      skills,
+      markets,
+      jobTypes,
+      experience,
+      companySize,
+      investmentStage
+    };
+    if (saveChanges) {
+      onClose(value);
+    } else {
+      onClose();
+    }
   };
   const getAriaLabel = () => 'Salary range';
   const valuetext = (value) => {
@@ -157,7 +181,7 @@ const FilterDialog = ({
   };
 
   return (
-    <Dialog onClose={handleClose} open={open} maxWidth='lg' fullWidth={true} sx={{'.MuiDialog-paper': {
+    <Dialog onClose={() => handleClose()} open={open} maxWidth='lg' fullWidth={true} sx={{'.MuiDialog-paper': {
       height: '90vh'
     }}}>
       <DialogContent>
@@ -171,7 +195,6 @@ const FilterDialog = ({
                       multiple
                       id="tags-outlined"
                       options={jobRoles}
-                      getOptionLabel={(option) => option.title}
                       filterSelectedOptions
                       size='small'
                       renderInput={(params) => (
@@ -188,8 +211,8 @@ const FilterDialog = ({
                   </Grid>
                   <Grid item xs={12} md={6}>
                       <Select
-                        value={selectedValue.location ? selectedValue.location : 0}
-                        onChange={() => {}}
+                        value={location}
+                        onChange={(e) => handleInputChange(e, 'location')}
                         fullWidth
                         size='small'
                       >
@@ -201,7 +224,7 @@ const FilterDialog = ({
                   <Grid item xs={12} md={6}>
                     <Grid container spacing={2}>
                       <Grid item xs={5} md={5}>
-                        <Button variant="outlined" endIcon={<CancelIcon />} fullWidth onClick={() => {}}>
+                        <Button variant="outlined" endIcon={<CancelIcon />} fullWidth>
                           Skills - {skills.length}
                         </Button>
                       </Grid>
@@ -292,7 +315,8 @@ const FilterDialog = ({
                       key={true}
                       disablePortal
                       id="combo-box-demo"
-                      options={currencies}
+                      options={skillsList}
+                      getOptionLabel={item => item.title}
                       fullWidth
                       size='small'
                       onChange={(e, value) => handleInputChange(e, 'skills', value)}
@@ -315,7 +339,11 @@ const FilterDialog = ({
                               }
                             >
                               <ListItemText
-                                primary={skill[0] + skill.substr(1,).toLowerCase()}
+                                primary={
+                                  skill.title 
+                                  ? skill.title[0] + skill.title.substr(1,).toLowerCase()
+                                  : skill[0] + skill.substr(1,).toLowerCase()
+                                }
                                 sx={{m: 0}}
                               />
                             </ListItem>
@@ -362,7 +390,8 @@ const FilterDialog = ({
                       key={true}
                       disablePortal
                       id="combo-box-demo"
-                      options={currencies}
+                      options={marketsList}
+                      getOptionLabel={item => item.title}
                       fullWidth
                       size='small'
                       onChange={(e, value) => handleInputChange(e, 'markets', value)}
@@ -385,7 +414,11 @@ const FilterDialog = ({
                               }
                             >
                               <ListItemText
-                                primary={market[0].toUpperCase() + market.substr(1,).toLowerCase()}
+                                primary={
+                                  market.title 
+                                  ? market.title[0].toUpperCase() + market.title.substr(1,).toLowerCase()
+                                  : market[0].toUpperCase() + market.substr(1,).toLowerCase()
+                                }
                                 sx={{m: 0}}
                               />
                             </ListItem>
@@ -574,8 +607,8 @@ const FilterDialog = ({
       <DialogActions sx={{
         pr: 3
       }}>
-        <Button variant='text'>Cancel</Button>
-        <Button variant='contained' color='primary'>Save changes</Button>
+        <Button variant='text' onClick={() => handleClose()}>Cancel</Button>
+        <Button variant='contained' color='primary' onClick={() => handleClose(true)}>Save changes</Button>
       </DialogActions>
     </Dialog>
   );
@@ -586,7 +619,7 @@ FilterDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedValue: PropTypes.shape({
     roles: PropTypes.array,
-    location: PropTypes.number
+    location: PropTypes.string
   }),
   locations: PropTypes.object.isRequired,
   jobRoles: PropTypes.array.isRequired,

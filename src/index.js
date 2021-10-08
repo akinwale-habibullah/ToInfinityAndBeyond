@@ -1,12 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import reducers from './reducers';
+import middlewares from './middlewares';
 import './index.css';
 import App from './App';
+import CssBaseline from '@mui/material/CssBaseline';
 import reportWebVitals from './reportWebVitals';
+
+const store = createStore(reducers, middlewares);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <>
+        <CssBaseline />
+        <App />
+      </>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
